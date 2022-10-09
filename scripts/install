@@ -4,7 +4,6 @@
 
 # Source YunoHost helpers
 source /usr/share/yunohost/helpers
-source _future.sh
 
 # Retrieve manifest arguments
 app=$YNH_APP_INSTANCE_NAME
@@ -18,13 +17,21 @@ readonly final_path=/var/www/$app_system_name
 
 function main()
 {
+    echo "Installing $app_display_name...: Main"
     configure_app
+    echo "Installing $app_display_name...: Configure app"
     install_dependencies
+    echo "Installing $app_display_name...: Install dependencies"
     init_venv
+    echo "Installing $app_display_name...: Init venv"
     configure_flask_app
+    echo "Installing $app_display_name...: Configure flask app"
     configure_service
+    echo "Installing $app_display_name...: Configure service"
     configure_nginx_and_ssowat
+    echo "Installing $app_display_name...: Configure nginx and ssowat"
     start_app
+    echo "Installing $app_display_name...: Start app"
 }
 
 
