@@ -1,0 +1,38 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}Admin{% endblock title %}
+
+{% block content %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>How Many</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in data %}
+        <tr>
+            {% for elem in i %}
+            <td>{{ elem }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    
+    <tr>
+        <td>Yes: {{ counter['yes'] }}</td>
+        <td>Maybe: {{ counter['maybe'] }}</td>
+        <td>No: {{ counter['no'] }}</td>
+    </tr>
+    <tr>
+        <td>Yes: {{ people['yes'] }}</td>
+        <td>Maybe: {{ people['maybe'] }}</td>
+        <td>Total: {{ people['total'] }}</td>
+    </tr>
+    </tbody>
+
+
+{% endblock content %}
+

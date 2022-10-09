@@ -1,0 +1,23 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+    {% block title%} Geoff's 50th{% endblock %}
+
+    {% block style %}
+    {{ super() }}
+
+    <style> 
+        
+    </style>
+
+    {% endblock %}
+    {% block content %}
+    <center>
+    <h1>Geoff Webberley's 50th Suprise Birthday Party!</h1>
+    <h2><strong>Date:</strong> 11/06/2022 <br><strong>Time:</strong> 00:00 - 23:59 <br> 
+    <strong>Where:</strong> 24227 Bella Ct, Santa Clarita, 91321, CA</h2>
+<div class="container">
+{{ wtf.quick_form(form) }}
+</div>   
+</center>
+    {% endblock %}
