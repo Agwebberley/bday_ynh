@@ -69,15 +69,6 @@
                     "en": "Make the app public?",
                     "fr": "Rendre l'application publique ?"
                 }
-            },
-            {
-                "name": "db_type",
-                "choices": ["postgresql", "sqlite"],
-                "default": "postgresql",
-                "ask": {
-                    "en": "Choose the database to use",
-                    "fr": "Choisissez la base de donnée à utiliser"
-                }
             }
         ]
     }

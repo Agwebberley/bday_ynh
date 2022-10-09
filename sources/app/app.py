@@ -5,10 +5,10 @@ from wtforms import StringField, SubmitField, IntegerField, SelectField
 from wtforms.validators import DataRequired
 
 
-app = Blueprint('app', __name__, url_prefix=SITE_ROOT)
-app.config['SECRET_KEY'] = 'mysecretkey'
+main = Blueprint('main', __name__, url_prefix=SITE_ROOT)
+main.config['SECRET_KEY'] = 'mysecretkey'
 
-bootstrap = Bootstrap(app)
+bootstrap = Bootstrap(main)
 
 class RSVP(FlaskForm):
     name = StringField('Name:', validators=[DataRequired()])
@@ -17,7 +17,7 @@ class RSVP(FlaskForm):
     submit = SubmitField('Submit')
 
 
-@app.route('/', methods=('GET', 'POST'))
+@main.route('/', methods=('GET', 'POST'))
 def home():
     form = RSVP()
     if request.method == 'POST':
@@ -29,11 +29,11 @@ def home():
     else:
         return render_template('index.html', form=form)
 
-@app.route('/success')
+@main.route('/success')
 def success():
     return render_template('success.html')
 
-@app.route('/admin')
+@main.route('/admin')
 def admin():
     file = open('rsvp.txt', 'r')
     data = file.read()
