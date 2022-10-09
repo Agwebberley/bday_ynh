@@ -14,7 +14,7 @@ readonly app_display_name=$YNH_APP_ARG_DISPLAY_NAME
 readonly is_public=$YNH_APP_ARG_IS_PUBLIC
 
 readonly final_path=/var/www/$app_system_name
-
+echo "1"
 function main()
 {
     echo "Installing $app_display_name...: Main"
@@ -34,6 +34,7 @@ function main()
     echo "Installing $app_display_name...: Start app"
 }
 
+echo "2"
 
 function configure_app()
 {
@@ -42,6 +43,7 @@ function configure_app()
     ynh_app_setting_set "$app" system_name "$app_system_name"
     ynh_app_setting_set "$app" is_public "$is_public"
 }
+echo "3"
 
 function install_dependencies()
 {
@@ -52,6 +54,7 @@ function install_dependencies()
                                  python3-virtualenv \
                                  python3-pip \
 }
+echo "4"
 
 function init_venv()
 {
@@ -70,6 +73,7 @@ function init_venv()
     popd
 }
 
+echo "5"
 
 function configure_flask_app()
 {
@@ -94,6 +98,7 @@ function configure_flask_app()
     useradd $app_system_name -d $final_path || echo "User already exists"
     chown -R $app_system_name:www-data $final_path
 }
+echo "6"
 
 function configure_service()
 {
@@ -110,6 +115,7 @@ function configure_service()
     systemctl enable $app_system_name
     yunohost service add $app_system_name -l /var/log/$app_system_name/access.log
 }
+echo "7"
 
 function configure_nginx_and_ssowat()
 {
@@ -123,10 +129,13 @@ function configure_nginx_and_ssowat()
     service nginx reload
     yunohost app ssowatconf
 }
+echo "8"
 
 function start_app()
 {
     systemctl start $app_system_name
 }
+
+echo "9"
 
 main
