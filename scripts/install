@@ -81,7 +81,6 @@ function configure_flask_app()
     cp -r ../sources/* $final_path/
 
     # App settings
-    ynh_replace_string "__YNH_DB_NAME__"     "$db_name"    ../conf/settings.py
     ynh_replace_string "__YNH_APP_WEBPATH__" "$path"       ../conf/settings.py
     ynh_replace_string "__YNH_APP_FSPATH__"  "$final_path" ../conf/settings.py
 
