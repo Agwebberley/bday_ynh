@@ -1,6 +1,6 @@
 {
-    "name": "Flask Template",
-    "id": "flask",
+    "name": "Bday",
+    "id": "bday",
     "packaging_format": 1,
     "description": {
         "en": "Flask app template.",

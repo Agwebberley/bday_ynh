@@ -14,7 +14,6 @@ path=$YNH_APP_ARG_PATH
 readonly app_system_name=$YNH_APP_ARG_SYSTEM_NAME
 readonly app_display_name=$YNH_APP_ARG_DISPLAY_NAME
 readonly is_public=$YNH_APP_ARG_IS_PUBLIC
-readonly db_type=$YNH_APP_ARG_DB_TYPE
 
 readonly final_path=/var/www/$app_system_name
 
@@ -24,22 +23,12 @@ function main()
     configure_app
     install_dependencies
     init_venv
-    init_db
     configure_flask_app
     configure_service
     configure_nginx_and_ssowat
     start_app
 }
 
-function check_assertions()
-{
-    if su postgres -c "psql -lqt | cut -d \| -f 1 | grep -qw test"
-    then
-        ynh_die "Database already exists :<"
-    fi
-    # app_system_name is made of [a-z0-9]
-    # app_display_name is made of [a-zA-Z0-9 ]
-}
 
 function configure_app()
 {
@@ -47,28 +36,16 @@ function configure_app()
     ynh_app_setting_set "$app" display_name "$app_display_name"
     ynh_app_setting_set "$app" system_name "$app_system_name"
     ynh_app_setting_set "$app" is_public "$is_public"
-    ynh_app_setting_set "$app" db_type "$db_type"
 }
 
 function install_dependencies()
 {
-    if [ "$db_type" = 'postgresql' ]
-    then
-        db_dependencies="postgresql postgresql-server-dev-all"
 
-    elif [ "$db_type" = 'sqlite' ]
-    then
-        db_dependencies="sqlite3"
-
-    else
-        ynh_die "Unknown database type"
-    fi
 
     ynh_install_app_dependencies virtualenv \
                                  python3-dev \
                                  python3-virtualenv \
                                  python3-pip \
-                                 $db_dependencies                             
 }
 
 function init_venv()
@@ -81,40 +58,13 @@ function init_venv()
     set -o nounset 
     pip install Flask
     pip install Flask-Script
-    pip install Flask-SQLAlchemy
-    #psycopg2 driver for sqlalchemy postgresql dialect (either that or pg8000)
-    if [ "$db_type" = 'postgresql' ]; then pip install psycopg2; fi
+    pip install Flask-Bootstrap
+    pip install Flask-WTF
+
     pip install gunicorn
     popd
 }
 
-function init_db()
-{
-    # Generate random password
-    readonly db_name=$app_system_name
-    readonly db_user=$app_system_name
-    readonly db_pwd=$(ynh_string_random)
-
-    if [ "$db_type" = 'postgresql' ]
-    then
-        # Initialize postgresql database
-        ynh_psql_create_db $db_name $db_user $db_pwd
-        readonly db_host=$db_user:$db_pwd@localhost #:$db_port
-
-    elif [ "$db_type" = 'sqlite' ]
-    then
-        # Initialize sqlite database  
-        # TODO: password
-        ynh_sqlite_create_db $db_name
-        readonly db_host=""
-
-    else
-        ynh_die "Unknown database type"
-    fi
-
-    # Store database password for upgrade
-    ynh_app_setting_set "$app" db_password "$db_pwd"
-}
 
 function configure_flask_app()
 {
@@ -137,14 +87,7 @@ function configure_flask_app()
     ynh_replace_string "__YNH_APP_PATH__" "$final_path"      ../conf/gunicorn.py
     cp ../conf/gunicorn.py $final_path/
 
-    # Init db
-    pushd $final_path
-    set +o nounset 
-    source venv/bin/activate
-    set -o nounset 
-    ./manage.py nuke
-    ./manage.py lorem
-    popd
+
 
     # Set permissions
     useradd $app_system_name -d $final_path || echo "User already exists"
