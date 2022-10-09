@@ -5,7 +5,7 @@ from wtforms import StringField, SubmitField, IntegerField, SelectField
 from wtforms.validators import DataRequired
 
 
-main = Blueprint('main', __name__, url_prefix=SITE_ROOT)
+main = Blueprint('main', __name__, url_prefix='/')
 main.config['SECRET_KEY'] = 'mysecretkey'
 
 bootstrap = Bootstrap(main)
