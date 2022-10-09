@@ -6,9 +6,7 @@ from wtforms.validators import DataRequired
 
 
 main = Blueprint('main', __name__, url_prefix='/')
-main.config['SECRET_KEY'] = 'mysecretkey'
 
-bootstrap = Bootstrap(main)
 
 class RSVP(FlaskForm):
     name = StringField('Name:', validators=[DataRequired()])
